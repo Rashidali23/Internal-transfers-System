@@ -17,9 +17,10 @@ This Go-based application facilitates internal financial transfers between accou
 1. **Clone the repo:**
    
    git clone https://github.com/Rashidali23/Internal-transfers-System.git
-   cd Internal-transfers-System
 
- 2. **Run the application:**
+    cd Internal-transfers-System
+
+ 3. **Run the application:**
     go run main.go
   NOTE: Make sure PostgreSQL is running and accessible
 
