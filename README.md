@@ -30,16 +30,19 @@ This Go-based application facilitates internal financial transfers between accou
 Use Postman or curl to test:
 
  Create Account:
+ 
                curl -X POST http://localhost:8080/accounts -H "Content-Type: application/json" \-d '{"account_id": 1, "initial_balance": "100.00000"}'
 
 
 
 
 Get Account:
+
          curl http://localhost:8080/accounts/1 
 
 
 
 Make Transaction:
+
              curl -X POST http://localhost:8080/transactions -H "Content-Type: application/json" \-d '{"source_account_id": 1, "destination_account_id": 2, "amount": "20.00000"}'  
 
