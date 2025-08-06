@@ -22,6 +22,7 @@ This Go-based application facilitates internal financial transfers between accou
 
  3. **Run the application:**
     go run main.go
+  
   NOTE: Make sure PostgreSQL is running and accessible
 
 ##  Testing Instructions
