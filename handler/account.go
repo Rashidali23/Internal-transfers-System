@@ -4,15 +4,16 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 
 	"Internal-transfers-System/db"
 
-	"github.com/gorilla/mux"
 	"Internal-transfers-System/models"
-)
 
+	"github.com/gorilla/mux"
+)
 
 func CreateAccount(w http.ResponseWriter, r *http.Request) {
 	var acc models.Account
@@ -20,8 +21,13 @@ func CreateAccount(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid input", http.StatusBadRequest)
 		return
 	}
-
-	_, err := db.DB.Exec("INSERT INTO accounts (account_id, balance) VALUES ($1, $2)", acc.AccountID, acc.Balance)
+	balanc, err := strconv.ParseFloat(acc.Balance, 64)
+	if err != nil {
+		log.Println("error while converting string to float ", err)
+		http.Error(w, fmt.Sprintf("Error while converting to float: %v", err), http.StatusInternalServerError)
+		return
+	}
+	_, err = db.DB.Exec("INSERT INTO accounts (account_id, balance) VALUES ($1, $2)", acc.AccountID, balanc)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Error creating account: %v", err), http.StatusInternalServerError)
 		return
