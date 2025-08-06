@@ -7,11 +7,26 @@ import (
 	_ "github.com/lib/pq"
 )
 
+const connStr = "host=localhost port=5432 user=postgres password=user dbname=transfers sslmode=disable"
+const masterConnStr = "host=localhost port=5432 user=postgres password=user dbname=postgres sslmode=disable"
+
 var DB *sql.DB
 
 func InitDB() {
-	connStr := "host=localhost port=5432 user=postgres password=user dbname=transfers sslmode=disable"
 	var err error
+
+	// Step 1: Connect to the default "postgres" database
+	masterDB, err := sql.Open("postgres", masterConnStr)
+	if err != nil {
+		log.Fatalf("Error connecting to master DB: %v", err)
+	}
+	defer masterDB.Close()
+
+	// Step 2: Check if the "transfers" database exists, create if not
+	_, err = masterDB.Exec("CREATE DATABASE transfers")
+	if err != nil && err.Error() != `pq: database "transfers" already exists` {
+		log.Fatalf("Error creating transfers DB: %v", err)
+	}
 	DB, err = sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatalf("Error opening database: %v", err)
