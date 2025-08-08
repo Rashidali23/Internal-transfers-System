@@ -4,15 +4,19 @@ This Go-based application facilitates internal financial transfers between accou
 
 ---
 
-## 🔧 Requirements
+##  Setup Instructions
 
-- Go 1.20+
-- PostgreSQL (running locally or in Docker)
+1. **Clone the repo:**
+   
+   git clone https://github.com/Rashidali23/Internal-transfers-System.git
 
-## 🔧 Requirements
+    cd Internal-transfers-System
+
+  ## 🔧 Requirements
  Before running the application, you need to configure your PostgreSQL connection details.
 
- Update your conf.env file with correct PostgreSQL credentials:
+ Update conf.env file with correct PostgreSQL credentials:
+ 
     DB_HOST=localhost
     DB_PORT=5432
     DB_USER=postgres
@@ -36,20 +40,13 @@ DB_MASTER_NAME: The default database used to create DB_NAME if it doesn't exist 
 DB_SSLMODE: Set to disable for local setups
 
 ⚠️ Make sure these values match your PostgreSQL setup, otherwise the app won't connect correctly.
----
 
-##  Setup Instructions
-
-1. **Clone the repo:**
+2. **Run the application:**
    
-   git clone https://github.com/Rashidali23/Internal-transfers-System.git
-
-    cd Internal-transfers-System
-
- 3. **Run the application:**
     go run main.go
   
   NOTE: Make sure PostgreSQL is running and accessible
+
 
 ##  Testing Instructions
 
