@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	log.Println("main strted")
+	log.Println("main started")
 	db.InitDB()
 	r := mux.NewRouter()
 

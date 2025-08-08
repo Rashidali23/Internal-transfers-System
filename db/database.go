@@ -2,18 +2,38 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
+	"os"
 
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
-
-const connStr = "host=localhost port=5432 user=postgres password=user dbname=transfers sslmode=disable"
-const masterConnStr = "host=localhost port=5432 user=postgres password=user dbname=postgres sslmode=disable"
 
 var DB *sql.DB
 
 func InitDB() {
-	var err error
+	// Load .env file
+	err := godotenv.Load("conf.env")
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+
+	// Read env variables
+	host := os.Getenv("DB_HOST")
+	port := os.Getenv("DB_PORT")
+	user := os.Getenv("DB_USER")
+	password := os.Getenv("DB_PASSWORD")
+	dbname := os.Getenv("DB_NAME")
+	masterDBName := os.Getenv("DB_MASTER_NAME")
+	sslmode := os.Getenv("DB_SSLMODE")
+
+	// Prepare connection strings
+	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+		host, port, user, password, dbname, sslmode)
+
+	masterConnStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+		host, port, user, password, masterDBName, sslmode)
 
 	// Step 1: Connect to the default "postgres" database
 	masterDB, err := sql.Open("postgres", masterConnStr)
@@ -22,11 +42,13 @@ func InitDB() {
 	}
 	defer masterDB.Close()
 
-	// Step 2: Check if the "transfers" database exists, create if not
-	_, err = masterDB.Exec("CREATE DATABASE transfers")
-	if err != nil && err.Error() != `pq: database "transfers" already exists` {
+	// Step 2: Create the "transfers" database if not exists
+	_, err = masterDB.Exec("CREATE DATABASE " + dbname)
+	if err != nil && err.Error() != fmt.Sprintf(`pq: database "%s" already exists`, dbname) {
 		log.Fatalf("Error creating transfers DB: %v", err)
 	}
+
+	// Step 3: Connect to the "transfers" DB
 	DB, err = sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatalf("Error opening database: %v", err)
